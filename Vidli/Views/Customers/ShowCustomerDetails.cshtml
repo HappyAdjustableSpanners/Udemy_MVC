@@ -1,0 +1,16 @@
+﻿@model Vidli.ViewModels.CustomerDetailsViewModel
+@{
+    ViewBag.Title = "ShowCustomerDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ShowCustomerDetails</h2>
+
+<p>@Model.Name</p>
+<ul>
+    <li>Membership Type: @Model.MembershipType</li>
+    @if (Model.Birthdate.HasValue)
+    {
+        <li>Birthdate: @Model.Birthdate</li>
+    }
+</ul>
