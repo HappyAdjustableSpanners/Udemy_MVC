@@ -9,7 +9,8 @@ namespace Vidli.ViewModels
     public class MovieDetailsViewModel
     {
         public string Name { get; set; }
-        public string Genre { get; set; }
+        public Genres Genre { get; set; }
+        public int GenreId { get; set; }
         public DateTime DateAdded { get; set; }
         public int NumInStock { get; set; }
         public DateTime ReleaseDate { get; set; }

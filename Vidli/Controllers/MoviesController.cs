@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Web;
@@ -26,7 +27,7 @@ namespace Vidli.Controllers
         // Pass movies to view
         public ActionResult ShowMovies()
         {
-            var movies = _context.Movies.ToList();
+            var movies = _context.Movies.Include(m => m.Genre).ToList();
 
 
             var viewModel = new MoviesViewModel
@@ -39,11 +40,12 @@ namespace Vidli.Controllers
 
         public ActionResult ShowMovieDetails(int id)
         {
-            var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
+            var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(c => c.Id == id);
             var viewModel = new MovieDetailsViewModel
             {
                 Name = movie.Name,
                 Genre = movie.Genre,
+                GenreId = movie.GenreId,
                 DateAdded = movie.DateAdded,
                 ReleaseDate = movie.ReleaseDate,
                 NumInStock = movie.NumInStock
@@ -81,5 +83,50 @@ namespace Vidli.Controllers
             //{
             //    return Content(String.Format("year={0}, month={1}", year, month));
             //}
+
+
+        public ActionResult Edit(int id)
+        {
+            var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
+
+            if (movie == null)
+            {
+                return HttpNotFound();
+            }
+
+            // construct view model
+            var viewModel = new MovieFormViewModel
+            {
+                Movie = movie,
+                Genres = _context.Genres.ToList()
+            };
+
+            return View("MovieForm", viewModel);
         }
+
+        public ActionResult Create()
+        {
+            //create movie
+            var movie = new Movie();
+
+            // construct view model
+            var viewModel = new MovieFormViewModel
+            {
+                Movie = movie,
+                Genres = _context.Genres.ToList()
+            };
+
+            return View("MovieForm", viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Save(Movie movie)
+        {
+            _context.Movies.Add(movie);
+
+            _context.SaveChanges();
+
+            return RedirectToAction("ShowMovies");
+        }
+    }
 }

@@ -8,11 +8,15 @@ namespace Vidli.Models
 {
     public class Movie
     {
+       
         public int Id { get; set; }
-        public string Name { get; set; }
 
+        [Required][StringLength(255)] public string Name { get; set; }
+
+        public Genres Genre { get; set; }
+ 
         [Required]
-        public string Genre { get; set; }
+        public int GenreId { get; set; }
 
         [Required]
         public DateTime DateAdded { get; set; }
