@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Vidli.Models
+namespace Vidli.Dtos
 {
-    public class Movie
+    public class MovieDto
     {
-       
+
         public int Id { get; set; }
 
-        [Required][StringLength(255)] public string Name { get; set; }
+        [Required]
+        [StringLength(255)]
+        public string Name { get; set; }
 
-        public Genres Genre { get; set; }
- 
         [Required]
         public int GenreId { get; set; }
 

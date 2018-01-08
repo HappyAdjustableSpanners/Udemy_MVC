@@ -67,8 +67,24 @@ namespace Vidli.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Customer customer)
         {
+            //currently if model state is not valid in accordance with our model parameters,
+            // save changes will crash the program
+
+            //We can prevent this with data validation using ModelState
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new CustomerFormViewModel
+                {
+                    Customer = customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+
+                return View("CustomerForm", viewModel);
+            }
+
             if (customer.Id == 0)
             {
                 _context.Customers.Add(customer);
@@ -100,6 +116,21 @@ namespace Vidli.Controllers
                 return HttpNotFound();
             }
 
+            var viewModel = new CustomerFormViewModel
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes.ToList()
+            };
+
+            return View("CustomerForm", viewModel);
+        }
+
+        public ActionResult Create()
+        {
+            //create customer
+            var customer = new Customer();
+
+            // construct view model
             var viewModel = new CustomerFormViewModel
             {
                 Customer = customer,
